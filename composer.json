@@ -3,7 +3,10 @@
     "description": "Wayforpay PHP SDK",
     "type": "library",
     "require": {
-        "php": ">= 5.3.0"
+        "php": ">= 5.3.3",
+        "guzzle/guzzle": "~3.9",
+        "ext-json": "*",
+        "easyframework/collections": "~3.2"
     },
     "license": "MIT",
     "authors": [
@@ -11,5 +14,10 @@
             "name": "Vladislav Lyshenko",
             "email": "vladdnepr1989@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "WayForPay\\SDK\\": "src/"
+        }
+    }
 }
