@@ -11,6 +11,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 
 ## Table Of Contents
 
+
 - [WayForPay documentation](#wayforpay-documentation)
 - [How to use](#how-to-use)
   - [Wizard](#wizard)
