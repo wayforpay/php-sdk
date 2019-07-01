@@ -11,13 +11,14 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 
 ## Table Of Contents
 
-
 - [WayForPay documentation](#wayforpay-documentation)
 - [How to use](#how-to-use)
   - [Wizard](#wizard)
     - [Transactions List](#transactions-list)
     - [Charge](#charge)
     - [Complete 3DS](#complete-3ds)
+    - [Check](#check)
+    - [Refund](#refund)
 - [Contributing](#contributing)
 
 
@@ -34,7 +35,7 @@ See [transaction-list.php](examples/transaction-list.php).
 
 ```bash
 $ php examples/transaction-list.php 
-Status: 1
+Reason Code: 1100
 2019-07-01 07:02:44     PURCHASE        Declined                9024 UAH
 2019-07-01 06:48:27     PURCHASE        Expired                 50000 UAH
 2019-07-01 07:04:10     PURCHASE        Declined                9024 UAH
@@ -95,6 +96,27 @@ Status: Approved
 
 Response will be instance of `Complete3DSResponse`. Transaction can be retrieved via
 `getTransaction` method.
+
+#### Check
+
+```bash
+$ php examples/check.php 
+Reason Code: 1100
+Order status: Refunded
+```
+
+Response will be instance of `CheckResponse`. Order can be retrieved via
+`getOrder` method.
+
+### Refund
+
+```bash
+$ php examples/refund.php 
+Reason Code: 1100
+Order status: Refunded
+```
+
+Response will be instance of `RufundResponse`.
 
 ## Contributing
 See [contributing note](./CONTRIBUTING.md)
