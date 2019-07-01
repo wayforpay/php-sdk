@@ -3,7 +3,6 @@
 namespace WayForPay\SDK\Request;
 
 use DateTime;
-use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Response\TransactionListResponse;
 
@@ -32,17 +31,17 @@ class TransactionListRequest extends ApiRequest
         $this->dateEnd = $dateEnd;
     }
 
-    public function getSignatureFieldsRequired()
+    public function getRequestSignatureFieldsRequired()
     {
-        return array_merge(parent::getSignatureFieldsRequired(), array(
+        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
             'dateBegin',
             'dateEnd',
         ));
     }
 
-    public function getSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
     {
-        return array_merge(parent::getSignatureFieldsValues($charset), array(
+        return array_merge(parent::getRequestSignatureFieldsValues($charset), array(
             'dateBegin' => $this->dateBegin->getTimestamp(),
             'dateEnd' => $this->dateEnd->getTimestamp(),
         ));
@@ -61,13 +60,8 @@ class TransactionListRequest extends ApiRequest
         ));
     }
 
-    /**
-     * @param array $data
-     * @return ResponseInterface|TransactionListResponse
-     * @throws \Exception
-     */
-    public function getResponse(array $data)
+    public function getResponseClass()
     {
-        return new TransactionListResponse($data);
+        return TransactionListResponse::getClass();
     }
 }

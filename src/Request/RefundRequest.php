@@ -2,7 +2,6 @@
 
 namespace WayForPay\SDK\Request;
 
-use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Response\RufundResponse;
 
@@ -48,22 +47,32 @@ class RefundRequest extends ApiRequest
         $this->comment = $comment;
     }
 
-    public function getSignatureFieldsRequired()
+    public function getRequestSignatureFieldsRequired()
     {
-        return array_merge(parent::getSignatureFieldsRequired(), array(
+        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
             'orderReference',
             'amount',
             'currency'
         ));
     }
 
-    public function getSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
     {
-        return array_merge(parent::getSignatureFieldsValues($charset), array(
+        return array_merge(parent::getRequestSignatureFieldsValues($charset), array(
             'orderReference' => $this->orderReference,
             'amount' => $this->amount,
             'currency' => $this->currency
         ));
+    }
+
+    public function getResponseSignatureFieldsRequired()
+    {
+        return array(
+            'merchantAccount',
+            'orderReference',
+            'transactionStatus',
+            'reasonCode',
+        );
     }
 
     public function getTransactionType()
@@ -81,13 +90,8 @@ class RefundRequest extends ApiRequest
         ));
     }
 
-    /**
-     * @param array $data
-     * @return ResponseInterface|RufundResponse
-     * @throws \Exception
-     */
-    public function getResponse(array $data)
+    public function getResponseClass()
     {
-        return new RufundResponse($data);
+        return RufundResponse::getClass();
     }
 }

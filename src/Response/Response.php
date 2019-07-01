@@ -42,4 +42,12 @@ class Response implements ResponseInterface
     {
         return $this->reason;
     }
+
+    /**
+     * @return string
+     */
+    public static function getClass()
+    {
+        return get_called_class();
+    }
 }

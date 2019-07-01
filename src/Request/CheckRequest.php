@@ -2,7 +2,6 @@
 
 namespace WayForPay\SDK\Request;
 
-use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Response\CheckResponse;
 
@@ -25,18 +24,32 @@ class CheckRequest extends ApiRequest
         $this->orderReference = $orderReference;
     }
 
-    public function getSignatureFieldsRequired()
+    public function getRequestSignatureFieldsRequired()
     {
-        return array_merge(parent::getSignatureFieldsRequired(), array(
+        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
             'orderReference',
         ));
     }
 
-    public function getSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
     {
-        return array_merge(parent::getSignatureFieldsValues($charset), array(
+        return array_merge(parent::getRequestSignatureFieldsValues($charset), array(
             'orderReference' => $this->orderReference,
         ));
+    }
+
+    public function getResponseSignatureFieldsRequired()
+    {
+        return array(
+            'merchantAccount',
+            'orderReference',
+            'amount',
+            'currency',
+            'authCode',
+            'cardPan',
+            'transactionStatus',
+            'reasonCode',
+        );
     }
 
     public function getTransactionType()
@@ -51,13 +64,8 @@ class CheckRequest extends ApiRequest
         ));
     }
 
-    /**
-     * @param array $data
-     * @return ResponseInterface|CheckResponse
-     * @throws \Exception
-     */
-    public function getResponse(array $data)
+    public function getResponseClass()
     {
-        return new CheckResponse($data);
+        return CheckResponse::getClass();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace WayForPay\SDK\Request;
 
-use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Response\Complete3DSResponse;
 
@@ -53,13 +52,8 @@ class Complete3DSRequest extends ApiRequest
         );
     }
 
-    /**
-     * @param array $data
-     * @return ResponseInterface|Complete3DSResponse
-     * @throws \Exception
-     */
-    public function getResponse(array $data)
+    public function getResponseClass()
     {
-        return new Complete3DSResponse($data);
+        return Complete3DSResponse::getClass();
     }
 }

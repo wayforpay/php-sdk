@@ -12,6 +12,7 @@ use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Domain\Reason;
 use WayForPay\SDK\Endpoint\ApiEndpoint;
 use WayForPay\SDK\Exception\ApiException;
+use WayForPay\SDK\Exception\SignatureException;
 
 abstract class ApiRequest implements TransactionRequestInterface
 {
@@ -44,23 +45,31 @@ abstract class ApiRequest implements TransactionRequestInterface
         return array(
             'transactionType' => $this->getTransactionType(),
             'merchantAccount' => $this->credential->getAccount(),
-            'merchantSignature' => $this->getSignature(),
+            'merchantSignature' => $this->getSignature(
+                $this->getRequestSignatureFieldsRequired(),
+                $this->getRequestSignatureFieldsValues()
+            ),
             'apiVersion' => self::API_VERSION,
         );
     }
 
-    public function getSignatureFieldsRequired()
+    public function getRequestSignatureFieldsRequired()
     {
         return array(
             'merchantAccount',
         );
     }
 
-    public function getSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
     {
         return array(
             'merchantAccount' => $this->credential->getAccount(),
         );
+    }
+
+    public function getResponseSignatureFieldsRequired()
+    {
+        return array();
     }
 
     /**
@@ -121,14 +130,41 @@ abstract class ApiRequest implements TransactionRequestInterface
         }
     }
 
+    abstract public function getResponseClass();
+
     /**
+     * @param array $data
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function getResponse(array $data)
+    {
+        if ($signatureRequired = $this->getResponseSignatureFieldsRequired()) {
+            $expected = $this->getSignature(
+                $signatureRequired,
+                array_intersect_key($data, array_flip($signatureRequired))
+            );
+
+            if (!isset($data['merchantSignature'])
+                || $expected !== $data['merchantSignature']
+            ) {
+                throw new SignatureException(
+                    'Response signature mismatch: expected ' . $expected . ', got ' . $data['merchantSignature']
+                );
+            }
+        }
+
+        $class = $this->getResponseClass();
+        return new $class($data);
+    }
+
+    /**
+     * @param array $fieldsRequired
+     * @param array $fieldsValues
      * @return string
      */
-    public function getSignature()
+    protected function getSignature(array $fieldsRequired, array $fieldsValues)
     {
-        $fieldsRequired = $this->getSignatureFieldsRequired();
-        $fieldsValues = $this->getSignatureFieldsValues();
-
         $data = array();
         $error = array();
 

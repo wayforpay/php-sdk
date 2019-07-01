@@ -4,7 +4,6 @@ namespace WayForPay\SDK\Request;
 
 use DateTime;
 use WayForPay\SDK\Collection\ProductCollection;
-use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Domain\Card;
 use WayForPay\SDK\Domain\CardToken;
@@ -200,9 +199,9 @@ class ChargeRequest extends ApiRequest
         $this->socialUri = strval($socialUri);
     }
 
-    public function getSignatureFieldsRequired()
+    public function getRequestSignatureFieldsRequired()
     {
-        return array_merge(parent::getSignatureFieldsRequired(), array(
+        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
             'merchantDomainName',
             'orderReference',
             'orderDate',
@@ -212,9 +211,9 @@ class ChargeRequest extends ApiRequest
         ));
     }
 
-    public function getSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
     {
-        return array_merge(parent::getSignatureFieldsValues($charset), array(
+        return array_merge(parent::getRequestSignatureFieldsValues($charset), array(
             'merchantDomainName' => $this->merchantDomainName,
             'orderReference' => $this->orderReference,
             'orderDate' => $this->orderDate->getTimestamp(),
@@ -222,6 +221,20 @@ class ChargeRequest extends ApiRequest
             'currency' => $this->currency,
             'products' => $this->products
         ));
+    }
+
+    public function getResponseSignatureFieldsRequired()
+    {
+        return array(
+            'merchantAccount',
+            'orderReference',
+            'amount',
+            'currency',
+            'authCode',
+            'cardPan',
+            'transactionStatus',
+            'reasonCode',
+        );
     }
 
     public function getTransactionType()
@@ -277,13 +290,8 @@ class ChargeRequest extends ApiRequest
         return array_filter($data);
     }
 
-    /**
-     * @param array $data
-     * @return ResponseInterface|ChargeResponse
-     * @throws \Exception
-     */
-    public function getResponse(array $data)
+    public function getResponseClass()
     {
-        return new ChargeResponse($data);
+        return ChargeResponse::getClass();
     }
 }
