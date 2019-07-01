@@ -30,22 +30,45 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 ### Wizard
 #### Transactions List
 
-```php
-<?php
+See [transaction-list.php](examples/transaction-list.php).
 
-use WayForPay\SDK\Wizard\TransactionListWizard;
-use WayForPay\SDK\Credential\AccountSecretTestCredential;
-use WayForPay\SDK\Credential\AccountSecretCredential;
-
-// Use test credential or yours
-$credential = new AccountSecretTestCredential();
-//$credential = new AccountSecretCredential('account', 'secret');
-
-$response = TransactionListWizard::get($credential)
-    ->setDateBegin(new \DateTime('2019-06-20'))
-    ->setDateEnd(new \DateTime('2019-06-26'))
-    ->getRequest()
-    ->send();
+```bash
+$ php examples/transaction-list.php 
+Status: 1
+2019-07-01 07:02:44     PURCHASE        Declined                9024 UAH
+2019-07-01 06:48:27     PURCHASE        Expired                 50000 UAH
+2019-07-01 07:04:10     PURCHASE        Declined                9024 UAH
+2019-07-01 07:14:14     CHARGE          Approved                0.01 UAH
+2019-07-01 07:13:31     PURCHASE        Declined                9024 UAH
+2019-07-01 07:14:38     CHARGE          Approved                0.01 UAH
+2019-07-01 07:13:31     PURCHASE        Declined                9024 UAH
+2019-07-01 07:15:23     CHARGE          Declined                0.01 UAH
+2019-07-01 07:17:39     REFUND          Refunded                0.01 UAH
+2019-07-01 07:17:41     REFUND          Refunded                0.01 UAH
+2019-07-01 07:17:44     CHARGE          Approved                0.01 UAH
+2019-07-01 07:17:48     REFUND          Refunded                0.01 UAH
+2019-07-01 07:19:14     CHARGE          Approved                0.01 UAH
+2019-07-01 07:04:11     PURCHASE        Expired                 9024 UAH
+2019-07-01 07:19:42     PURCHASE        Declined                9024 UAH
+2019-07-01 07:23:08     CHARGE          Approved                0.01 UAH
+2019-07-01 07:24:25     CHARGE          Approved                0.01 UAH
+2019-07-01 07:19:41     PURCHASE        Declined                9024 UAH
+2019-07-01 07:32:39     REFUND          Refunded                0.01 UAH
+2019-07-01 07:32:41     REFUND          Refunded                0.01 UAH
+2019-07-01 07:34:37     PURCHASE        Declined                9024 UAH
+2019-07-01 07:35:46     CHARGE          WaitingAuthComplete     39 UAH
+2019-07-01 07:34:38     PURCHASE        Declined                9024 UAH
+2019-07-01 07:36:01     REFUND          Voided                  39 UAH
+2019-07-01 07:36:41     CHARGE          WaitingAuthComplete     95 UAH
+2019-07-01 07:36:42     REFUND          Refunded                0.01 UAH
+2019-07-01 07:37:01     REFUND          Voided                  95 UAH
+2019-07-01 07:39:52     PURCHASE        Declined                9024 UAH
+2019-07-01 07:39:52     PURCHASE        Declined                9024 UAH
+2019-07-01 07:40:33     REFUND          Refunded                0.01 UAH
+2019-07-01 07:40:35     REFUND          Refunded                0.01 UAH
+2019-07-01 07:25:52     PURCHASE        Expired                 1.99 USD
+2019-07-01 07:42:58     CHARGE          Approved                0.01 UAH
+2019-07-01 07:59:27     REFUND          Refunded                0.01 UAH
 ```
 
 Response will be instance of `TransactionListResponse`. Transactions can be retrieved via
@@ -53,46 +76,11 @@ Response will be instance of `TransactionListResponse`. Transactions can be retr
 
 #### Charge
 
-```php
-<?php
+See [charge.php](examples/charge.php).
 
-use WayForPay\SDK\Wizard\ChargeWizard;
-use WayForPay\SDK\Credential\AccountSecretTestCredential;
-use WayForPay\SDK\Credential\AccountSecretCredential;
-use WayForPay\SDK\Domain\Transaction;
-use WayForPay\SDK\Request\ChargeRequest;
-use WayForPay\SDK\Collection\ProductCollection;
-use WayForPay\SDK\Domain\Product;
-use WayForPay\SDK\Domain\CardToken;
-use WayForPay\SDK\Domain\Card;
-use WayForPay\SDK\Domain\Client;
-
-// Use test credential or yours
-$credential = new AccountSecretTestCredential();
-//$credential = new AccountSecretCredential('account', 'secret');
-
-$response = ChargeWizard::get($credential)
-    ->setOrderReference(sha1(microtime(true)))
-    ->setAmount(0.01)
-    ->setCurrency('USD')
-    ->setOrderDate(new \DateTime())
-    ->setMerchantDomainName('https://google.com')
-    ->setMerchantTransactionType(Transaction::MERCHANT_TRANSACTION_TYPE_SALE)
-    ->setMerchantTransactionSecureType(ChargeRequest::MERCHANT_TRANSACTION_SECURE_TYPE_AUTO)
-    ->setClient(new Client(
-        'John',
-        'Dou',
-        'john.dou@gmail.com',
-        '+12025550152',
-        'USA'
-    ))
-    ->setProducts(new ProductCollection(array(
-        new Product('test', 0.01, 1)
-    )))
-    ->setCard(new Card('5276999765600381', '2021', '05', '237', 'JOHN DOU'))
-    //->setCardToken(new CardToken('1aa11aaa-1111-11aa-a1a1-0000a00a00aa'))
-    ->getRequest()
-    ->send();
+```bash
+$ php examples/charge.php 
+Status: InProcessing
 ```
 
 Response will be instance of `ChargeResponse`. Transaction can be retrieved via
@@ -100,23 +88,9 @@ Response will be instance of `ChargeResponse`. Transaction can be retrieved via
 
 #### Complete 3DS
 
-```php
-<?php
-
-use WayForPay\SDK\Wizard\Complete3DSWizard;
-use WayForPay\SDK\Credential\AccountSecretTestCredential;
-use WayForPay\SDK\Credential\AccountSecretCredential;
-
-// Use test credential or yours
-$credential = new AccountSecretTestCredential();
-//$credential = new AccountSecretCredential('account', 'secret');
-
-$response = Complete3DSWizard::get($credential)
-    ->setAuthTicket('authTicket')
-    ->setD3Md('d3md')
-    ->setD3Pares('d3pares')
-    ->getRequest()
-    ->send();
+```bash
+$ php examples/complete-3ds.php 
+Status: Approved
 ```
 
 Response will be instance of `Complete3DSResponse`. Transaction can be retrieved via

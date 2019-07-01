@@ -4,6 +4,7 @@ namespace WayForPay\SDK\Response;
 
 use Easy\Collections\ArrayList;
 use WayForPay\SDK\Collection\TransactionHistoryCollection;
+use WayForPay\SDK\Domain\Transaction;
 use WayForPay\SDK\Domain\TransactionHistory;
 
 class TransactionListResponse extends Response
@@ -29,7 +30,7 @@ class TransactionListResponse extends Response
     }
 
     /**
-     * @return ArrayList
+     * @return TransactionHistoryCollection|Transaction[]
      */
     public function getTransactionList()
     {

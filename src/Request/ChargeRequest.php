@@ -261,10 +261,10 @@ class ChargeRequest extends ApiRequest
         if ($this->card) {
             $data = array_merge($data, array(
                 'card' => $this->card->getCard(),
-                'expMonth' => $this->card->getMonth(),
-                'expYear' => $this->card->getYear(),
-                'cardCvv' => $this->card->getCvv(),
-                'cardHolder' => $this->card->getHolder(),
+                'expMonth' => sprintf('%02d', $this->card->getMonth()),
+                'expYear' => strval($this->card->getYear()),
+                'cardCvv' => strval($this->card->getCvv()),
+                'cardHolder' => strval($this->card->getHolder()),
             ));
         } elseif ($this->recToken) {
             $data = array_merge($data, array(
