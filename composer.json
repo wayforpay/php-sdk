@@ -4,9 +4,9 @@
     "type": "library",
     "require": {
         "php": ">= 5.3.3",
-        "guzzle/guzzle": "~3.9",
         "ext-json": "*",
-        "easyframework/collections": "~3.2"
+        "easyframework/collections": "~3.2",
+        "anlutro/curl": "^1.4"
     },
     "license": "MIT",
     "authors": [

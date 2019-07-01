@@ -2,14 +2,16 @@
 
 namespace WayForPay\SDK\Request;
 
-use WayForPay\SDK\Client\GuzzleClient;
+use WayForPay\SDK\Client\CurlClient;
 use WayForPay\SDK\Contract\ClientInterface;
 use WayForPay\SDK\Contract\EndpointInterface;
 use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Contract\SignatureAbleInterface;
 use WayForPay\SDK\Contract\TransactionRequestInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
+use WayForPay\SDK\Domain\Reason;
 use WayForPay\SDK\Endpoint\ApiEndpoint;
+use WayForPay\SDK\Exception\ApiException;
 
 abstract class ApiRequest implements TransactionRequestInterface
 {
@@ -85,12 +87,12 @@ abstract class ApiRequest implements TransactionRequestInterface
     }
 
     /**
-     * @return ClientInterface|GuzzleClient
+     * @return ClientInterface|CurlClient
      */
     public function getClient()
     {
         if (!$this->client) {
-            $this->client = new GuzzleClient();
+            $this->client = new CurlClient();
         }
 
         return $this->client;
@@ -112,7 +114,11 @@ abstract class ApiRequest implements TransactionRequestInterface
      */
     public function send()
     {
-        return $this->getClient()->send($this);
+        try {
+            return $this->getClient()->send($this);
+        } catch (\Exception $e) {
+            throw new ApiException(new Reason(-1, $e->getMessage()));
+        }
     }
 
     /**
