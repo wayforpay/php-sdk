@@ -19,6 +19,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
     - [Complete 3DS](#complete-3ds)
     - [Check](#check)
     - [Refund](#refund)
+- [TODO](#todo)
 - [Contributing](#contributing)
 
 
@@ -117,6 +118,16 @@ Order status: Refunded
 ```
 
 Response will be instance of `RufundResponse`.
+
+## TODO
+
+* Methods
+    * SETTLE
+    * P2P_CREDIT
+    * CREATE_INVOICE
+    * P2_PHONE
+* Pay Widget
+* PURCHASE form
 
 ## Contributing
 See [contributing note](./CONTRIBUTING.md)
