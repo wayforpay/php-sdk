@@ -1,11 +1,11 @@
-# WayForPay PHP SDK (PHP >= 5.3)
-[![License](https://img.shields.io/github/license/wayforpay/php-sdk.svg)](https://github.com/wayforpay/php-sdk) [![Code size](https://img.shields.io/github/languages/code-size/wayforpay/php-sdk.svg)](https://github.com/wayforpay/php-sdk) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=wayforpay/php-sdk)](https://dependabot.com)
+# WayForPay PHP SDK [![Packagist PHP version](https://img.shields.io/packagist/php-v/wayforpay/php-sdk.svg?style=for-the-badge&logo=php)](https://packagist.org/packages/wayforpay/php-sdk)
+[![License](https://img.shields.io/github/license/wayforpay/php-sdk.svg)](https://github.com/wayforpay/php-sdk) ![Packagist](https://img.shields.io/packagist/dm/wayforpay/php-sdk.svg) 
 
-[![Scrutinizer Build Status](https://img.shields.io/scrutinizer/build/g/wayforpay/php-sdk.svg?label=Scrutinizer&logo=scrutinizer)](https://scrutinizer-ci.com/g/wayforpay/php-sdk/build-status/master) [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/wayforpay/php-sdk/master.svg?logo=scrutinizer)](https://scrutinizer-ci.com/g/wayforpay/php-sdk/?branch=master) [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/wayforpay/php-sdk/master.svg?logo=scrutinizer)](https://scrutinizer-ci.com/g/wayforpay/php-sdk/?branch=master)
+[![Latest Stable Version](https://img.shields.io/packagist/v/wayforpay/php-sdk.svg)](https://packagist.org/packages/wayforpay/php-sdk) ![GitHub Release Date](https://img.shields.io/github/release-date/wayforpay/php-sdk.svg)
+ 
+[![Packagist PHP version](https://img.shields.io/packagist/php-v/wayforpay/php-sdk.svg)](https://packagist.org/packages/wayforpay/php-sdk) [![Code size](https://img.shields.io/github/languages/code-size/wayforpay/php-sdk.svg)](https://github.com/wayforpay/php-sdk)
 
-[![Travis Build Status](https://img.shields.io/travis/wayforpay/php-sdk/master.svg?label=Travis&logo=travis)](https://travis-ci.org/wayforpay/php-sdk) [![Travis PHP versions](https://img.shields.io/travis/php-v/wayforpay/php-sdk.svg?logo=travis)](https://travis-ci.org/wayforpay/php-sdk)
-
-[![Latest Stable Version](https://img.shields.io/packagist/v/wayforpay/php-sdk.svg)](https://packagist.org/packages/wayforpay/php-sdk) [![Packagist PHP version](https://img.shields.io/packagist/php-v/wayforpay/php-sdk.svg)](https://packagist.org/packages/wayforpay/php-sdk)
+[![GitHub stars](https://img.shields.io/github/stars/wayforpay/php-sdk.svg)](https://github.com/wayforpay/php-sdk/stargazers) [![GitHub issues](https://img.shields.io/github/issues/wayforpay/php-sdk.svg)](https://github.com/wayforpay/php-sdk/issues)
 
 PHP SDK for payment system [WayForPay](https://wayforpay.com).
 
