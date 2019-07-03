@@ -1,4 +1,16 @@
 <?php
+/*
+ * This file is part of the WayForPay project.
+ *
+ * @link https://github.com/wayforpay/php-sdk
+ *
+ * @author Vladislav Lyshenko <vladdnepr1989@gmail.com>
+ * @copyright Copyright 2019 WayForPay
+ * @license   https://opensource.org/licenses/MIT
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace WayForPay\SDK\Request;
 
@@ -6,18 +18,16 @@ use WayForPay\SDK\Client\CurlClient;
 use WayForPay\SDK\Contract\ClientInterface;
 use WayForPay\SDK\Contract\EndpointInterface;
 use WayForPay\SDK\Contract\ResponseInterface;
-use WayForPay\SDK\Contract\SignatureAbleInterface;
 use WayForPay\SDK\Contract\TransactionRequestInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Domain\Reason;
 use WayForPay\SDK\Endpoint\ApiEndpoint;
 use WayForPay\SDK\Exception\ApiException;
 use WayForPay\SDK\Exception\SignatureException;
+use WayForPay\SDK\Helper\SignatureHelper;
 
 abstract class ApiRequest implements TransactionRequestInterface
 {
-    const FIELDS_DELIMITER  = ';';
-    const DEFAULT_CHARSET   = 'utf8';
     const API_VERSION = 1;
 
     /**
@@ -45,9 +55,10 @@ abstract class ApiRequest implements TransactionRequestInterface
         return array(
             'transactionType' => $this->getTransactionType(),
             'merchantAccount' => $this->credential->getAccount(),
-            'merchantSignature' => $this->getSignature(
+            'merchantSignature' => SignatureHelper::calculateSignature(
                 $this->getRequestSignatureFieldsRequired(),
-                $this->getRequestSignatureFieldsValues()
+                $this->getRequestSignatureFieldsValues(),
+                $this->credential->getSecret()
             ),
             'apiVersion' => self::API_VERSION,
         );
@@ -60,7 +71,7 @@ abstract class ApiRequest implements TransactionRequestInterface
         );
     }
 
-    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues()
     {
         return array(
             'merchantAccount' => $this->credential->getAccount(),
@@ -143,9 +154,10 @@ abstract class ApiRequest implements TransactionRequestInterface
         $response = new $class($data);
 
         if ($signatureRequired = $this->getResponseSignatureFieldsRequired()) {
-            $expected = $this->getSignature(
+            $expected = SignatureHelper::calculateSignature(
                 $signatureRequired,
-                array_intersect_key($data, array_flip($signatureRequired))
+                array_intersect_key($data, array_flip($signatureRequired)),
+                $this->credential->getSecret()
             );
 
             if (!isset($data['merchantSignature'])
@@ -158,49 +170,5 @@ abstract class ApiRequest implements TransactionRequestInterface
         }
 
         return $response;
-    }
-
-    /**
-     * @param array $fieldsRequired
-     * @param array $fieldsValues
-     * @return string
-     */
-    protected function getSignature(array $fieldsRequired, array $fieldsValues)
-    {
-        $data = array();
-        $error = array();
-
-        foreach ($fieldsRequired as $item) {
-            if (array_key_exists($item, $fieldsValues)) {
-                $value = $fieldsValues[$item];
-                if (is_object($value) && $value instanceof SignatureAbleInterface) {
-                    $data[] = $value->getConcatenatedString(self::FIELDS_DELIMITER);
-                } elseif (is_array($value)) {
-                    $data[] = implode(self::FIELDS_DELIMITER, $value);
-                } else {
-                    $data[] = (string) $value;
-                }
-            } else {
-                $error[] = $item;
-            }
-        }
-
-        /*if ( $this->_charset != self::DEFAULT_CHARSET) {
-            if (!function_exists('iconv')) {
-                throw new \RuntimeException('iconv extension required');
-            }
-
-            foreach($data as $key => $value) {
-                $data[$key] = iconv($this->_charset, self::DEFAULT_CHARSET, $data[$key]);
-            }
-        }*/
-
-        if (!empty($error)) {
-            throw new \InvalidArgumentException('Missed signature field(s): ' . implode(', ', $error) . '.');
-        }
-
-        return $data ?
-            hash_hmac('md5', implode(self::FIELDS_DELIMITER, $data), $this->credential->getSecret()) :
-            false;
     }
 }

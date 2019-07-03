@@ -1,4 +1,16 @@
 <?php
+/*
+ * This file is part of the WayForPay project.
+ *
+ * @link https://github.com/wayforpay/php-sdk
+ *
+ * @author Vladislav Lyshenko <vladdnepr1989@gmail.com>
+ * @copyright Copyright 2019 WayForPay
+ * @license   https://opensource.org/licenses/MIT
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace WayForPay\SDK\Request;
 
@@ -56,9 +68,9 @@ class RefundRequest extends ApiRequest
         ));
     }
 
-    public function getRequestSignatureFieldsValues($charset = self::DEFAULT_CHARSET)
+    public function getRequestSignatureFieldsValues()
     {
-        return array_merge(parent::getRequestSignatureFieldsValues($charset), array(
+        return array_merge(parent::getRequestSignatureFieldsValues(), array(
             'orderReference' => $this->orderReference,
             'amount' => $this->amount,
             'currency' => $this->currency
