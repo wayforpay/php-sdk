@@ -16,17 +16,17 @@ namespace WayForPay\SDK\Client;
 
 use anlutro\cURL\cURL;
 use anlutro\cURL\Request;
-use WayForPay\SDK\Contract\ClientInterface;
+use WayForPay\SDK\Contract\RequestInterface;
+use WayForPay\SDK\Contract\RequestTransformerInterface;
 use WayForPay\SDK\Contract\ResponseInterface;
-use WayForPay\SDK\Contract\TransactionRequestInterface;
 
-class CurlClient implements ClientInterface
+class CurlRequestTransformer implements RequestTransformerInterface
 {
     /**
-     * @param TransactionRequestInterface $transactionRequest
+     * @param RequestInterface $transactionRequest
      * @return ResponseInterface
      */
-    public function send(TransactionRequestInterface $transactionRequest)
+    public function transform(RequestInterface $transactionRequest)
     {
         $endpoint = $transactionRequest->getEndpoint();
 
@@ -35,7 +35,7 @@ class CurlClient implements ClientInterface
         $request = $curl->newRequest(
             $endpoint->getMethod(),
             $endpoint->getUrl(),
-            $transactionRequest->getTransactionData(),
+            array_filter($transactionRequest->getTransactionData()),
             Request::ENCODING_JSON
         );
 

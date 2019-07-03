@@ -14,11 +14,11 @@
 
 namespace WayForPay\SDK\Request;
 
-use WayForPay\SDK\Client\CurlClient;
-use WayForPay\SDK\Contract\ClientInterface;
+use WayForPay\SDK\Client\CurlRequestTransformer;
 use WayForPay\SDK\Contract\EndpointInterface;
+use WayForPay\SDK\Contract\RequestInterface;
+use WayForPay\SDK\Contract\RequestTransformerInterface;
 use WayForPay\SDK\Contract\ResponseInterface;
-use WayForPay\SDK\Contract\TransactionRequestInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Domain\Reason;
 use WayForPay\SDK\Endpoint\ApiEndpoint;
@@ -26,14 +26,14 @@ use WayForPay\SDK\Exception\ApiException;
 use WayForPay\SDK\Exception\SignatureException;
 use WayForPay\SDK\Helper\SignatureHelper;
 
-abstract class ApiRequest implements TransactionRequestInterface
+abstract class ApiRequest implements RequestInterface
 {
     const API_VERSION = 1;
 
     /**
-     * @var ClientInterface
+     * @var RequestTransformerInterface
      */
-    private $client;
+    private $transformer;
 
     /**
      * @var EndpointInterface
@@ -56,18 +56,10 @@ abstract class ApiRequest implements TransactionRequestInterface
             'transactionType' => $this->getTransactionType(),
             'merchantAccount' => $this->credential->getAccount(),
             'merchantSignature' => SignatureHelper::calculateSignature(
-                $this->getRequestSignatureFieldsRequired(),
                 $this->getRequestSignatureFieldsValues(),
                 $this->credential->getSecret()
             ),
             'apiVersion' => self::API_VERSION,
-        );
-    }
-
-    public function getRequestSignatureFieldsRequired()
-    {
-        return array(
-            'merchantAccount',
         );
     }
 
@@ -107,24 +99,24 @@ abstract class ApiRequest implements TransactionRequestInterface
     }
 
     /**
-     * @return ClientInterface|CurlClient
+     * @return RequestTransformerInterface|CurlRequestTransformer
      */
-    public function getClient()
+    public function getTransformer()
     {
-        if (!$this->client) {
-            $this->client = new CurlClient();
+        if (!$this->transformer) {
+            $this->transformer = new CurlRequestTransformer();
         }
 
-        return $this->client;
+        return $this->transformer;
     }
 
     /**
-     * @param ClientInterface $client
+     * @param RequestTransformerInterface $transformer
      * @return ApiRequest
      */
-    public function setClient($client)
+    public function setTransformer($transformer)
     {
-        $this->client = $client;
+        $this->transformer = $transformer;
 
         return $this;
     }
@@ -135,7 +127,7 @@ abstract class ApiRequest implements TransactionRequestInterface
     public function send()
     {
         try {
-            return $this->getClient()->send($this);
+            return $this->getTransformer()->transform($this);
         } catch (\Exception $e) {
             throw new ApiException(new Reason(-1, $e->getMessage()));
         }
@@ -153,10 +145,12 @@ abstract class ApiRequest implements TransactionRequestInterface
         $class = $this->getResponseClass();
         $response = new $class($data);
 
-        if ($signatureRequired = $this->getResponseSignatureFieldsRequired()) {
+        if ($signatureRequired = array_flip($this->getResponseSignatureFieldsRequired())) {
             $expected = SignatureHelper::calculateSignature(
-                $signatureRequired,
-                array_intersect_key($data, array_flip($signatureRequired)),
+                array_intersect_key( // https://stackoverflow.com/a/17438222
+                    array_replace($signatureRequired, $data),
+                    $signatureRequired
+                ),
                 $this->credential->getSecret()
             );
 

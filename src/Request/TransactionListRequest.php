@@ -43,14 +43,6 @@ class TransactionListRequest extends ApiRequest
         $this->dateEnd = $dateEnd;
     }
 
-    public function getRequestSignatureFieldsRequired()
-    {
-        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
-            'dateBegin',
-            'dateEnd',
-        ));
-    }
-
     public function getRequestSignatureFieldsValues()
     {
         return array_merge(parent::getRequestSignatureFieldsValues(), array(

@@ -17,7 +17,7 @@ namespace WayForPay\SDK\Wizard;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Request\RefundRequest;
 
-class RefundWizard extends BaseWizard
+class RefundWizard extends RequestWizard
 {
     /**
      * @var AccountSecretCredential

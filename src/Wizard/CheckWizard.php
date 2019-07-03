@@ -17,7 +17,7 @@ namespace WayForPay\SDK\Wizard;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Request\CheckRequest;
 
-class CheckWizard extends BaseWizard
+class CheckWizard extends RequestWizard
 {
     /**
      * @var AccountSecretCredential

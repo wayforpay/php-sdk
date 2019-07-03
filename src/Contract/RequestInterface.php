@@ -15,7 +15,7 @@
 namespace WayForPay\SDK\Contract;
 
 
-interface TransactionRequestInterface
+interface RequestInterface
 {
     /**
      * @return array

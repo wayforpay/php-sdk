@@ -17,7 +17,7 @@ namespace WayForPay\SDK\Wizard;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Request\Complete3DSRequest;
 
-class Complete3DSWizard extends BaseWizard
+class Complete3DSWizard extends RequestWizard
 {
     /**
      * @var AccountSecretCredential

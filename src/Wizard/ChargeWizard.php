@@ -22,7 +22,7 @@ use WayForPay\SDK\Domain\CardToken;
 use WayForPay\SDK\Domain\Client;
 use WayForPay\SDK\Request\ChargeRequest;
 
-class ChargeWizard extends BaseWizard
+class ChargeWizard extends RequestWizard
 {
     /**
      * @var AccountSecretCredential
@@ -106,8 +106,8 @@ class ChargeWizard extends BaseWizard
 
     protected $propertyRequired = array(
         'orderReference', 'amount', 'currency',
-        'client', 'products', 'orderDate',
-        'merchantDomainName', 'merchantTransactionType', 'merchantTransactionSecureType',
+        'products', 'orderDate',
+        'merchantDomainName',
     );
 
     /**
@@ -137,12 +137,12 @@ class ChargeWizard extends BaseWizard
             $this->orderReference,
             $this->amount,
             $this->currency,
-            $this->client,
             $this->products,
             $this->orderDate,
             $this->merchantDomainName,
             $this->merchantTransactionType,
             $this->merchantTransactionSecureType,
+            $this->client,
             $this->serviceUrl,
             $this->holdTimeout,
             $this->merchantAuthType,

@@ -15,11 +15,11 @@
 namespace WayForPay\SDK\Contract;
 
 
-interface ClientInterface
+interface RequestTransformerInterface
 {
     /**
-     * @param TransactionRequestInterface $transactionRequest
+     * @param RequestInterface $transactionRequest
      * @return ResponseInterface
      */
-    public function send(TransactionRequestInterface $transactionRequest);
+    public function transform(RequestInterface $transactionRequest);
 }

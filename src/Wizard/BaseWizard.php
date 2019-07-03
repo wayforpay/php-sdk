@@ -14,17 +14,13 @@
 
 namespace WayForPay\SDK\Wizard;
 
-use WayForPay\SDK\Request\ApiRequest;
-
 abstract class BaseWizard
 {
     protected $propertyRequired = array();
 
     /**
-     * @return ApiRequest
+     * @throws \InvalidArgumentException
      */
-    abstract public function getRequest();
-
     protected function check()
     {
         $missed = array();

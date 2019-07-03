@@ -14,13 +14,8 @@
 
 namespace WayForPay\SDK\Domain;
 
-class Client
+class Delivery
 {
-    /**
-     * @var string
-     */
-    private $id;
-
     /**
      * @var string
      */
@@ -30,26 +25,6 @@ class Client
      * @var string
      */
     private $nameLast;
-
-    /**
-     * @var string
-     */
-    private $email;
-
-    /**
-     * @var string
-     */
-    private $phone;
-
-    /**
-     * @var string
-     */
-    private $country;
-
-    /**
-     * @var string
-     */
-    private $ip;
 
     /**
      * @var string
@@ -72,51 +47,52 @@ class Client
     private $zip;
 
     /**
-     * Client constructor.
+     * @var string
+     */
+    private $country;
+
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @var string
+     */
+    private $phone;
+
+    /**
+     * Delivery constructor.
      * @param string|null $nameFirst
      * @param string|null $nameLast
-     * @param string|null $email
-     * @param string|null $phone
-     * @param string|null $country
-     * @param string|null $id
-     * @param string|null $ip
      * @param string|null $address
      * @param string|null $city
      * @param string|null $state
      * @param string|null $zip
+     * @param string|null $country
+     * @param string|null $email
+     * @param string|null $phone
      */
     public function __construct(
         $nameFirst = null,
         $nameLast = null,
-        $email = null,
-        $phone = null,
-        $country = null,
-        $id = null,
-        $ip = null,
         $address = null,
         $city = null,
         $state = null,
-        $zip = null
+        $zip = null,
+        $country = null,
+        $email = null,
+        $phone = null
     ) {
-        $this->id = strval($id);
         $this->nameFirst = strval($nameFirst);
         $this->nameLast = strval($nameLast);
-        $this->email = strval($email);
-        $this->phone = strval($phone);
-        $this->country = strval($country);
-        $this->ip = strval($ip);
         $this->address = strval($address);
         $this->city = strval($city);
         $this->state = strval($state);
         $this->zip = strval($zip);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getId()
-    {
-        return $this->id;
+        $this->country = strval($country);
+        $this->email = strval($email);
+        $this->phone = strval($phone);
     }
 
     /**
@@ -138,17 +114,33 @@ class Client
     /**
      * @return string
      */
-    public function getEmail()
+    public function getAddress()
     {
-        return $this->email;
+        return $this->address;
     }
 
     /**
      * @return string
      */
-    public function getPhone()
+    public function getCity()
     {
-        return $this->phone;
+        return $this->city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZip()
+    {
+        return $this->zip;
     }
 
     /**
@@ -160,42 +152,18 @@ class Client
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getIp()
+    public function getEmail()
     {
-        return $this->ip;
+        return $this->email;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getAddress()
+    public function getPhone()
     {
-        return $this->address;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getZip()
-    {
-        return $this->zip;
+        return $this->phone;
     }
 }

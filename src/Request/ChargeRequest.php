@@ -20,7 +20,7 @@ use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Domain\Card;
 use WayForPay\SDK\Domain\CardToken;
 use WayForPay\SDK\Domain\Client;
-use WayForPay\SDK\Domain\Transaction;
+use WayForPay\SDK\Domain\MerchantTypes;
 use WayForPay\SDK\Response\ChargeResponse;
 
 /**
@@ -30,25 +30,20 @@ use WayForPay\SDK\Response\ChargeResponse;
  */
 class ChargeRequest extends ApiRequest
 {
-    const MERCHANT_AUTH_TYPE = 'SimpleSignature';
-
     private $merchantAuthTypeAllowed = array(
-        self::MERCHANT_AUTH_TYPE
+        MerchantTypes::AUTH_SIMPLE_SIGNATURE
     );
 
-    const MERCHANT_TRANSACTION_SECURE_TYPE_AUTO = 'AUTO';
-    const MERCHANT_TRANSACTION_SECURE_TYPE_3DS = '3DS';
-    const MERCHANT_TRANSACTION_SECURE_TYPE_NON3DS = 'NON3DS';
-
     private $merchantTransactionSecureTypeAllowed = array(
-        self::MERCHANT_TRANSACTION_SECURE_TYPE_AUTO,
-        self::MERCHANT_TRANSACTION_SECURE_TYPE_3DS,
-        self::MERCHANT_TRANSACTION_SECURE_TYPE_NON3DS,
+        MerchantTypes::TRANSACTION_SECURE_AUTO,
+        MerchantTypes::TRANSACTION_SECURE_3DS,
+        MerchantTypes::TRANSACTION_SECURE_NON3DS,
     );
 
     private $merchantTransactionTypeAllowed = array(
-        Transaction::MERCHANT_TRANSACTION_TYPE_SALE,
-        Transaction::MERCHANT_TRANSACTION_TYPE_AUTH,
+        MerchantTypes::TRANSACTION_AUTO,
+        MerchantTypes::TRANSACTION_SALE,
+        MerchantTypes::TRANSACTION_AUTH,
     );
 
     /**
@@ -133,12 +128,12 @@ class ChargeRequest extends ApiRequest
      * @param string $orderReference
      * @param float $amount
      * @param string $currency
-     * @param Client $client
      * @param ProductCollection $products
      * @param DateTime $orderDate
      * @param string $merchantDomainName
      * @param string $merchantTransactionType
      * @param string $merchantTransactionSecureType
+     * @param Client $client
      * @param string $serviceUrl
      * @param int $holdTimeout
      * @param string $merchantAuthType
@@ -148,14 +143,13 @@ class ChargeRequest extends ApiRequest
         AccountSecretCredential $credential,
         $card,
         $orderReference,
-        $amount,
-        $currency,
-        Client $client,
+        $amount, $currency,
         ProductCollection $products,
         DateTime $orderDate,
         $merchantDomainName,
-        $merchantTransactionType,
-        $merchantTransactionSecureType,
+        $merchantTransactionType = null,
+        $merchantTransactionSecureType = null,
+        Client $client = null,
         $serviceUrl = null,
         $holdTimeout = null,
         $merchantAuthType = null,
@@ -171,14 +165,14 @@ class ChargeRequest extends ApiRequest
             throw new \InvalidArgumentException('Card or CardToken required');
         }
 
-        if (!in_array($merchantTransactionType, $this->merchantTransactionTypeAllowed)) {
+        if ($merchantTransactionType && !in_array($merchantTransactionType, $this->merchantTransactionTypeAllowed)) {
             throw new \InvalidArgumentException(
                 'Unexpected transaction type, expected ' . implode(', ', $this->merchantTransactionTypeAllowed)
                 . ', got ' . $merchantTransactionType
             );
         }
 
-        if (!in_array($merchantTransactionSecureType, $this->merchantTransactionSecureTypeAllowed)) {
+        if ($merchantTransactionSecureType && !in_array($merchantTransactionSecureType, $this->merchantTransactionSecureTypeAllowed)) {
             throw new \InvalidArgumentException(
                 'Unexpected transaction secure type, expected ' . implode(', ', $this->merchantTransactionSecureTypeAllowed)
                 . ', got ' . $merchantTransactionSecureType
@@ -207,20 +201,8 @@ class ChargeRequest extends ApiRequest
         $this->currency = strtoupper(strval($currency));
         $this->holdTimeout = intval($holdTimeout);
         $this->products = $products;
-        $this->client = $client;
+        $this->client = $client ?: new Client();
         $this->socialUri = strval($socialUri);
-    }
-
-    public function getRequestSignatureFieldsRequired()
-    {
-        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
-            'merchantDomainName',
-            'orderReference',
-            'orderDate',
-            'amount',
-            'currency',
-            'products'
-        ));
     }
 
     public function getRequestSignatureFieldsValues()
@@ -268,6 +250,7 @@ class ChargeRequest extends ApiRequest
             'currency' => $this->currency,
             'holdTimeout' => $this->holdTimeout,
             'socialUri' => $this->socialUri,
+
             'clientAccountId' => $this->client->getId(),
             'clientFirstName' => $this->client->getNameFirst(),
             'clientLastName' => $this->client->getNameLast(),
@@ -278,10 +261,13 @@ class ChargeRequest extends ApiRequest
             'clientAddress' => $this->client->getAddress(),
             'clientCity' => $this->client->getCity(),
             'clientState' => $this->client->getState(),
+
             'productName' => $this->products->getNames(),
             'productPrice' => $this->products->getPrices(),
             'productCount' => $this->products->getCounts(),
-        ));
+        ), $this->client ? array(
+
+        ) : array());
 
         if ($this->card) {
             $data = array_merge($data, array(
@@ -299,7 +285,7 @@ class ChargeRequest extends ApiRequest
             throw new \RuntimeException('Card or token required');
         }
 
-        return array_filter($data);
+        return $data;
     }
 
     public function getResponseClass()

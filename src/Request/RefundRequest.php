@@ -59,15 +59,6 @@ class RefundRequest extends ApiRequest
         $this->comment = $comment;
     }
 
-    public function getRequestSignatureFieldsRequired()
-    {
-        return array_merge(parent::getRequestSignatureFieldsRequired(), array(
-            'orderReference',
-            'amount',
-            'currency'
-        ));
-    }
-
     public function getRequestSignatureFieldsValues()
     {
         return array_merge(parent::getRequestSignatureFieldsValues(), array(

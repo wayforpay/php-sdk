@@ -19,9 +19,7 @@ use WayForPay\SDK\Credential\AccountSecretTestCredential;
 use WayForPay\SDK\Domain\Card;
 use WayForPay\SDK\Domain\Client;
 use WayForPay\SDK\Domain\Product;
-use WayForPay\SDK\Domain\Transaction;
 use WayForPay\SDK\Exception\ApiException;
-use WayForPay\SDK\Request\ChargeRequest;
 use WayForPay\SDK\Wizard\ChargeWizard;
 
 // Use test credential or yours
@@ -35,8 +33,6 @@ try {
         ->setCurrency('USD')
         ->setOrderDate(new \DateTime())
         ->setMerchantDomainName('https://google.com')
-        ->setMerchantTransactionType(Transaction::MERCHANT_TRANSACTION_TYPE_SALE)
-        ->setMerchantTransactionSecureType(ChargeRequest::MERCHANT_TRANSACTION_SECURE_TYPE_AUTO)
         ->setClient(new Client(
             'John',
             'Dou',

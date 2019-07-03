@@ -14,6 +14,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 - [WayForPay documentation](#wayforpay-documentation)
 - [How to use](#how-to-use)
   - [Wizard](#wizard)
+    - [Purchase Form](#purchase-form)
     - [Transactions List](#transactions-list)
     - [Charge](#charge)
     - [Complete 3DS](#complete-3ds)
@@ -30,6 +31,23 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 
 ## How to use
 ### Wizard
+
+#### Purchase Form
+
+See [transaction-list.php](examples/purchase.php).
+
+```bash
+$ php examples/purchase.php > pay.html
+```
+
+After you can see at `pay.html` form with pay button. Open file in your browser and press `Pay`.
+
+You can open file via default browser in Linux-based OS like:
+
+```bash
+$ x-www-browser pay.html
+```
+
 #### Transactions List
 
 See [transaction-list.php](examples/transaction-list.php).

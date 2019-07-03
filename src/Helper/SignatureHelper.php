@@ -22,28 +22,21 @@ class SignatureHelper
     const DEFAULT_CHARSET   = 'utf8';
 
     /**
-     * @param array $fieldsRequired
      * @param array $fieldsValues
      * @param string $secret
      * @return string
      */
-    public static function calculateSignature(array $fieldsRequired, array $fieldsValues, $secret)
+    public static function calculateSignature(array $fieldsValues, $secret)
     {
         $data = array();
-        $error = array();
 
-        foreach ($fieldsRequired as $item) {
-            if (array_key_exists($item, $fieldsValues)) {
-                $value = $fieldsValues[$item];
-                if (is_object($value) && $value instanceof SignatureAbleInterface) {
-                    $data[] = $value->getConcatenatedString(self::FIELDS_DELIMITER);
-                } elseif (is_array($value)) {
-                    $data[] = implode(self::FIELDS_DELIMITER, $value);
-                } else {
-                    $data[] = (string) $value;
-                }
+        foreach ($fieldsValues as $item => $value) {
+            if (is_object($value) && $value instanceof SignatureAbleInterface) {
+                $data[] = $value->getConcatenatedString(self::FIELDS_DELIMITER);
+            } elseif (is_array($value)) {
+                $data[] = implode(self::FIELDS_DELIMITER, $value);
             } else {
-                $error[] = $item;
+                $data[] = (string) $value;
             }
         }
 
@@ -56,10 +49,6 @@ class SignatureHelper
                 $data[$key] = iconv($this->_charset, self::DEFAULT_CHARSET, $data[$key]);
             }
         }*/
-
-        if (!empty($error)) {
-            throw new \InvalidArgumentException('Missed signature field(s): ' . implode(', ', $error) . '.');
-        }
 
         return $data ?
             hash_hmac('md5', implode(self::FIELDS_DELIMITER, $data), $secret) :

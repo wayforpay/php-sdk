@@ -18,9 +18,6 @@ use DateTime;
 
 class Transaction extends TransactionBase
 {
-    const MERCHANT_TRANSACTION_TYPE_SALE = 'SALE';
-    const MERCHANT_TRANSACTION_TYPE_AUTH = 'AUTH';
-
     /**
      * @var string
      */

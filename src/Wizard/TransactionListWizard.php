@@ -18,7 +18,7 @@ use DateTime;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Request\TransactionListRequest;
 
-class TransactionListWizard extends BaseWizard
+class TransactionListWizard extends RequestWizard
 {
     /**
      * @var AccountSecretCredential
