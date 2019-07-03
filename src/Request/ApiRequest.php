@@ -139,6 +139,9 @@ abstract class ApiRequest implements TransactionRequestInterface
      */
     public function getResponse(array $data)
     {
+        $class = $this->getResponseClass();
+        $response = new $class($data);
+
         if ($signatureRequired = $this->getResponseSignatureFieldsRequired()) {
             $expected = $this->getSignature(
                 $signatureRequired,
@@ -154,8 +157,7 @@ abstract class ApiRequest implements TransactionRequestInterface
             }
         }
 
-        $class = $this->getResponseClass();
-        return new $class($data);
+        return $response;
     }
 
     /**
