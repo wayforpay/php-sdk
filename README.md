@@ -34,7 +34,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 
 #### Purchase Form
 
-See [transaction-list.php](examples/purchase.php).
+See [purchase.php](examples/purchase.php).
 
 ```bash
 $ php examples/purchase.php > pay.html
