@@ -15,6 +15,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 - [How to use](#how-to-use)
   - [Wizard](#wizard)
     - [Purchase Form](#purchase-form)
+    - [Purchase Widget](#purchase-widget)
     - [Transactions List](#transactions-list)
     - [Charge](#charge)
     - [Complete 3DS](#complete-3ds)
@@ -46,6 +47,22 @@ You can open file via default browser in Linux-based OS like:
 
 ```bash
 $ x-www-browser pay.html
+```
+
+#### Purchase Widget
+
+See [purchase-widget.php](examples/purchase-widget.php).
+
+```bash
+$ php examples/purchase-widget.php > widget.html
+```
+
+After you can see at `widget.html` widget with pay button. Open file in your browser and press `Pay`.
+
+You can open file via default browser in Linux-based OS like:
+
+```bash
+$ x-www-browser widget.html
 ```
 
 #### Transactions List
@@ -144,8 +161,6 @@ Response will be instance of `RufundResponse`.
     * P2P_CREDIT
     * CREATE_INVOICE
     * P2_PHONE
-* Pay Widget
-* PURCHASE form
 
 ## Contributing
 See [contributing note](./CONTRIBUTING.md)

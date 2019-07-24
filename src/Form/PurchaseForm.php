@@ -379,4 +379,58 @@ class PurchaseForm
 
         return $form;
     }
+
+    public function getWidget($callbackJsFunction = null, $buttonText = 'Pay', $buttonClass = 'btn btn-primary')
+    {
+        return $this->getWidgetExternalScript() .
+            $this->getWidgetInitScript($callbackJsFunction) .
+            $this->getWidgetButton($buttonText, $buttonClass);
+    }
+
+    public function getWidgetExternalScript()
+    {
+        return sprintf(
+            '<script defer async id="widget-wfp-script" language="javascript" type="text/javascript" onload="wfpInit()" src="%s"></script>',
+            'https://secure.wayforpay.com/server/pay-widget.js'
+        );
+    }
+
+    public function getWidgetInitScript($callbackJsFunction = null)
+    {
+        return sprintf(
+            '<script type="text/javascript">
+                var wayforpay = null;
+                var wfpPay = function () {
+                    wayforpay.run(%s);
+                }
+                var wfpInit = function() {      
+                    wayforpay = new Wayforpay();
+                    
+                    window.addEventListener("message", %s);
+                    
+                    function receiveMessage(event)
+                    {
+                        if(event.data == "WfpWidgetEventClose"       // при закрытии виджета пользователем
+                           || event.data == "WfpWidgetEventApproved" // при успешном завершении операции
+                           || event.data == "WfpWidgetEventDeclined" // при неуспешном завершении
+                           || event.data == "WfpWidgetEventPending"  // транзакция на обработке
+                        ) {
+                            console.log(event.data);
+                        }
+                    }
+                }
+            </script>',
+            \json_encode(array_filter($this->getData())),
+            $callbackJsFunction ? $callbackJsFunction : "receiveMessage"
+        );
+    }
+
+    public function getWidgetButton($buttonText = 'Pay', $buttonClass = 'btn btn-primary')
+    {
+        return sprintf(
+            '<button class="%s" type="button" onclick="wfpPay();">%s</button>',
+            $buttonClass,
+            $buttonText
+        );
+    }
 }
