@@ -12,6 +12,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 ## Table Of Contents
 
 - [WayForPay documentation](#wayforpay-documentation)
+- [Installing](#installing)
 - [How to use](#how-to-use)
   - [Wizard](#wizard)
     - [Purchase Form](#purchase-form)
@@ -32,7 +33,7 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 
 ## Installing
 
-The recommended way to install Guzzle is through
+The recommended way to install SDK is through
 [Composer](http://getcomposer.org).
 
 ```bash
