@@ -30,7 +30,32 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
 * [Ukrainian](https://wiki.wayforpay.com/display/WADU/Wayforpay+Api+documentations+UA)
 * [Russian](https://wiki.wayforpay.com/display/AD/Api+documentation)
 
+## Installing
+
+The recommended way to install Guzzle is through
+[Composer](http://getcomposer.org).
+
+```bash
+# Install Composer
+curl -sS https://getcomposer.org/installer | php
+```
+
+Next, run the Composer command to install the latest stable version:
+
+```bash
+php composer.phar require wayforpay/php-sdk
+```
+
+After installing, you need to require Composer's autoloader:
+
+```php
+require 'vendor/autoload.php';
+```
+
 ## How to use
+
+All examples require `composer install` before using after cloning from GitHub.
+
 ### Wizard
 
 #### Purchase Form
