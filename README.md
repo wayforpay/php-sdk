@@ -22,6 +22,8 @@ PHP SDK for payment system [WayForPay](https://wayforpay.com).
     - [Complete 3DS](#complete-3ds)
     - [Check](#check)
     - [Refund](#refund)
+  - [Service URL](#service-url)
+  - [Return URL](#return-url)
 - [TODO](#todo)
 - [Contributing](#contributing)
 
@@ -63,33 +65,25 @@ All examples require `composer install` before using after cloning from GitHub.
 
 See [purchase.php](examples/purchase.php).
 
-```bash
-$ php examples/purchase.php > pay.html
-```
-
-After you can see at `pay.html` form with pay button. Open file in your browser and press `Pay`.
-
-You can open file via default browser in Linux-based OS like:
+Run PHP built-in server
 
 ```bash
-$ x-www-browser pay.html
+$ php -S localhost:8000
 ```
+
+Then open `http://localhost:8000/examples/purchase.php` in browser.
 
 #### Purchase Widget
 
 See [purchase-widget.php](examples/purchase-widget.php).
 
-```bash
-$ php examples/purchase-widget.php > widget.html
-```
-
-After you can see at `widget.html` widget with pay button. Open file in your browser and press `Pay`.
-
-You can open file via default browser in Linux-based OS like:
+Run PHP built-in server
 
 ```bash
-$ x-www-browser widget.html
+$ php -S localhost:8000
 ```
+
+Then open `http://localhost:8000/examples/purchase-widget.php` in browser.
 
 #### Transactions List
 
@@ -170,7 +164,7 @@ Order status: Refunded
 Response will be instance of `CheckResponse`. Order can be retrieved via
 `getOrder` method.
 
-### Refund
+#### Refund
 
 ```bash
 $ php examples/refund.php 
@@ -179,6 +173,34 @@ Order status: Refunded
 ```
 
 Response will be instance of `RufundResponse`.
+
+### Service URL
+
+You can set service URL in wizard via
+
+```php
+$wizard->setServiceUrl('http://localhost:8000/examples/serviceUrl.php')
+```
+
+After payment processing WayForPay send payment data to specified URL. You can parse and check data like in example.
+
+See [serviceUrl.php](examples/serviceUrl.php).
+
+#### ⚠️⚠️⚠️ WARNING ⚠️⚠️⚠️
+
+*Service URL must be accessible via Internet. WayForPay can't send data to local machine!*
+
+### Return URL
+
+You can set service URL in wizard via
+
+```php
+$wizard->setReturnUrl('http://localhost:8000/examples/returnUrl.php')
+```
+
+After payment processing WayForPay send payment data to specified URL. You can parse and check data like in example.
+
+See [returnUrl.php](examples/returnUrl.php).
 
 ## TODO
 

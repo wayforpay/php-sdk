@@ -15,6 +15,7 @@
 namespace WayForPay\SDK\Domain;
 
 use DateTime;
+use WayForPay\SDK\Exception\InvalidFieldException;
 
 class TransactionBase
 {
@@ -177,7 +178,7 @@ class TransactionBase
         $baseCurrency = null
     ) {
         if (!in_array($status, $this->statusAllowed)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidFieldException(
                 'Unexpected transaction type `' . $status . '`, expect one of ' .
                 implode(', ', $this->statusAllowed)
             );

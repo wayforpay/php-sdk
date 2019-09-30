@@ -40,6 +40,8 @@ $form = PurchaseWizard::get($credential)
     ->setProducts(new ProductCollection(array(
         new Product('test', 0.01, 1)
     )))
+    ->setReturnUrl('http://localhost:8000/examples/returnUrl.php')
+    ->setServiceUrl('http://localhost:8000/examples/serviceUrl.php')
     ->getForm()
     ->getAsString();
 
