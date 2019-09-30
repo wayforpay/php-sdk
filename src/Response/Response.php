@@ -17,6 +17,7 @@ namespace WayForPay\SDK\Response;
 use WayForPay\SDK\Contract\ResponseInterface;
 use WayForPay\SDK\Domain\Reason;
 use WayForPay\SDK\Exception\ApiException;
+use WayForPay\SDK\Exception\InvalidFieldException;
 
 class Response implements ResponseInterface
 {
@@ -28,16 +29,17 @@ class Response implements ResponseInterface
     /**
      * Response constructor.
      * @param array $data
-     * @throws \Exception
+     * @throws InvalidFieldException
+     * @throws ApiException
      */
     public function __construct(array $data)
     {
         if (!isset($data['reason'])) {
-            throw new \InvalidArgumentException('Field `reason` required');
+            throw new InvalidFieldException('Field `reason` required');
         }
 
         if (!isset($data['reasonCode'])) {
-            throw new \InvalidArgumentException('Field `reason` required');
+            throw new InvalidFieldException('Field `reason` required');
         }
 
         $this->reason = new Reason($data['reasonCode'], $data['reason']);

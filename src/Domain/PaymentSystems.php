@@ -31,6 +31,7 @@ class PaymentSystems
     const VISA_CHECKOUT = 'visaCheckout';
     const GOOGLE_PAY = 'googlePay';
     const APPLE_PAY = 'applePay';
+    const PAY_PARTS_MONO = 'payPartsMono';
 
     private $default;
 
