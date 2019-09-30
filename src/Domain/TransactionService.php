@@ -141,7 +141,7 @@ class TransactionService extends TransactionBase
             $baseCurrency
         );
 
-        $this->merchantAccount = $merchantAccount;
+        $this->merchantAccount = strval($merchantAccount);
         $this->recToken = $recToken ? new CardToken($recToken) : null;
         $this->authCode = strval($authCode);
         $this->repayUrl = strval($repayUrl);
@@ -150,7 +150,7 @@ class TransactionService extends TransactionBase
     /**
      * @return string
      */
-    public function getMerchantAccount(): string
+    public function getMerchantAccount()
     {
         return $this->merchantAccount;
     }
