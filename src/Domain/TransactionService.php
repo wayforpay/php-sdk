@@ -19,6 +19,11 @@ use DateTime;
 class TransactionService extends TransactionBase
 {
     /**
+     * @var string
+     */
+    private $merchantAccount;
+
+    /**
      * @var CardToken
      */
     private $recToken;
@@ -67,7 +72,6 @@ class TransactionService extends TransactionBase
         $data = array_merge($default, $data);
 
         return new self(
-            $data['merchantTransactionType'],
             $data['orderReference'],
             new DateTime('@' . $data['createdDate']),
             $data['amount'],
@@ -86,14 +90,14 @@ class TransactionService extends TransactionBase
             isset($data['fee']) ? $data['fee'] : null,
             isset($data['baseAmount']) ? $data['baseAmount'] : null,
             isset($data['baseCurrency']) ? $data['baseCurrency'] : null,
-            isset($data['authCode']) ? $data['authCode'] : null,
+            isset($data['merchantAccount']) ? $data['merchantAccount'] : null,
             isset($data['recToken']) ? $data['recToken'] : null,
+            isset($data['authCode']) ? $data['authCode'] : null,
             isset($data['repayUrl']) ? $data['repayUrl'] : null
         );
     }
 
     public function __construct(
-        $merchantTransactionType,
         $orderReference,
         DateTime $createdDate,
         $amount, $currency,
@@ -111,8 +115,9 @@ class TransactionService extends TransactionBase
         $fee = null,
         $baseAmount = null,
         $baseCurrency = null,
-        $authCode = null,
+        $merchantAccount = null,
         $recToken = null,
+        $authCode = null,
         $repayUrl = null
     ) {
         parent::__construct(
@@ -136,9 +141,18 @@ class TransactionService extends TransactionBase
             $baseCurrency
         );
 
-        $this->repayUrl = strval($repayUrl);
-        $this->authCode = strval($authCode);
+        $this->merchantAccount = $merchantAccount;
         $this->recToken = $recToken ? new CardToken($recToken) : null;
+        $this->authCode = strval($authCode);
+        $this->repayUrl = strval($repayUrl);
+    }
+
+    /**
+     * @return string
+     */
+    public function getMerchantAccount(): string
+    {
+        return $this->merchantAccount;
     }
 
     /**
