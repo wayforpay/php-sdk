@@ -342,7 +342,7 @@ class PurchaseForm
         return $this;
     }
 
-    public function getAsString($submitText = 'Pay')
+    public function getAsString($submitText = 'Pay', $buttonClass = 'btn btn-primary')
     {
         $endpoint = $this->getEndpoint();
 
@@ -371,8 +371,9 @@ class PurchaseForm
         }
 
         $form .= sprintf(
-            '<input type="submit" value="%s"></form>',
-            $submitText
+            '<input type="submit" value="%s" class="%s">',
+            $submitText,
+            $buttonClass
         );
 
         $form .= '</form>';
