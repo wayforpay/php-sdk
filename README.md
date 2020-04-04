@@ -207,7 +207,6 @@ See [returnUrl.php](examples/returnUrl.php).
 * Methods
     * SETTLE
     * P2P_CREDIT
-    * CREATE_INVOICE
     * P2_PHONE
 
 ## Contributing
