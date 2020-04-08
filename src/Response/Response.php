@@ -45,7 +45,7 @@ class Response implements ResponseInterface
         $this->reason = new Reason($data['reasonCode'], $data['reason']);
 
         if (!$this->reason->isOK()) {
-            throw new ApiException($this->reason);
+//            throw new ApiException($this->reason);
         }
     }
 
