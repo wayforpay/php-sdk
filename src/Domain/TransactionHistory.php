@@ -15,6 +15,7 @@
 namespace WayForPay\SDK\Domain;
 
 use DateTime;
+use DateTimeZone;
 
 class TransactionHistory extends TransactionBase
 {
@@ -66,11 +67,13 @@ class TransactionHistory extends TransactionBase
         return new self(
             $data['transactionType'],
             $data['orderReference'],
-            new DateTime('@' . $data['createdDate']),
+//            new DateTime('@' . $data['createdDate']),
+            (new DateTime('@' . $data['createdDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())),
             $data['amount'],
             $data['currency'],
             $data['transactionStatus'],
-            new DateTime('@' . $data['processingDate']),
+//            new DateTime('@' . $data['processingDate']),
+            (new DateTime('@' . $data['processingDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())),
             $data['reasonCode'],
             $data['reason'],
             isset($data['email']) ? $data['email'] : null,
@@ -83,7 +86,7 @@ class TransactionHistory extends TransactionBase
             isset($data['fee']) ? $data['fee'] : null,
             isset($data['baseAmount']) ? $data['baseAmount'] : null,
             isset($data['baseCurrency']) ? $data['baseCurrency'] : null,
-            isset($data['settlementDate']) ? new DateTime('@' . $data['settlementDate']) : null,
+            isset($data['settlementDate']) ? (new DateTime('@' . $data['settlementDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())) : null,
             isset($data['settlementAmount']) ? $data['settlementAmount'] : null
         );
     }

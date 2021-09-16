@@ -16,6 +16,7 @@ namespace WayForPay\SDK\Wizard;
 
 use DateTime;
 use WayForPay\SDK\Credential\AccountSecretCredential;
+use WayForPay\SDK\Request\ApiRequest;
 use WayForPay\SDK\Request\TransactionListRequest;
 
 class TransactionListWizard extends RequestWizard
@@ -34,6 +35,11 @@ class TransactionListWizard extends RequestWizard
      * @var DateTime
      */
     protected $dateEnd;
+
+    /**
+     * @var string|int
+     */
+    protected $apiVersion;
 
     protected $propertyRequired = array('dateBegin', 'dateEnd');
 
@@ -72,12 +78,26 @@ class TransactionListWizard extends RequestWizard
     }
 
     /**
+     * @return TransactionListWizard
+     */
+    public function setApiVersion2()
+    {
+        $this->apiVersion = ApiRequest::API_VERSION_2;
+        return $this;
+    }
+
+    /**
      * @return TransactionListRequest
      */
     public function getRequest()
     {
         $this->check();
 
-        return new TransactionListRequest($this->credential, $this->dateBegin, $this->dateEnd);
+        $request = new TransactionListRequest($this->credential, $this->dateBegin, $this->dateEnd);
+        if (null !== $this->apiVersion) {
+            $request->setApiVersion($this->apiVersion);
+        }
+
+        return $request;
     }
 }

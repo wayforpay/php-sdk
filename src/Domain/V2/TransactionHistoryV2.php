@@ -12,69 +12,58 @@
  * file that was distributed with this source code.
  */
 
-namespace WayForPay\SDK\Domain;
+namespace WayForPay\SDK\Domain\V2;
 
 use DateTime;
+use DateTimeZone;
+use WayForPay\SDK\Domain\TransactionHistory;
 
-class Transaction extends TransactionBase
+class TransactionHistoryV2 extends TransactionHistory
 {
     /**
-     * @var string
+     * @var bool|null
      */
-    private $merchantTransactionType;
+    public $regularCreated;
 
     /**
-     * @var string
+     * @var bool|null
      */
-    private $authCode;
+    public $regularCheckout;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $authTicket;
+    public $deliveryAddress;
 
     /**
-     * @var CardToken
+     * @var string|null
      */
-    private $recToken;
+    public $deliveryPhone;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $d3AcsUrl;
+    public $deliveryName;
 
     /**
-     * @var string
+     * @var array|null
      */
-    private $d3Md;
+    public $products;
 
     /**
-     * @var string
+     * @var array|null
      */
-    private $d3Pareq;
-
-    /**
-     * @var string
-     */
-    private $returnUrl;
+    public $clientFields;
 
     /**
      * @param array $data
-     * @return Transaction
+     * @return TransactionHistory
      * @throws \Exception
      */
     public static function fromArray(array $data)
     {
         $required = array(
-            'merchantTransactionType',
-            'authCode',
-            'authTicket',
-            'recToken',
-            'd3AcsUrl',
-            'd3Md',
-            'd3Pareq',
-            'returnUrl',
-
+            'transactionType',
             'orderReference',
             'createdDate',
             'amount',
@@ -92,7 +81,7 @@ class Transaction extends TransactionBase
         }
 
         return new self(
-            $data['merchantTransactionType'],
+            $data['transactionType'],
             $data['orderReference'],
 //            new DateTime('@' . $data['createdDate']),
             (new DateTime('@' . $data['createdDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())),
@@ -113,18 +102,20 @@ class Transaction extends TransactionBase
             isset($data['fee']) ? $data['fee'] : null,
             isset($data['baseAmount']) ? $data['baseAmount'] : null,
             isset($data['baseCurrency']) ? $data['baseCurrency'] : null,
-            isset($data['authCode']) ? $data['authCode'] : null,
-            isset($data['authTicket']) ? $data['authTicket'] : null,
-            isset($data['recToken']) ? $data['recToken'] : null,
-            isset($data['d3AcsUrl']) ? $data['d3AcsUrl'] : null,
-            isset($data['d3Md']) ? $data['d3Md'] : null,
-            isset($data['d3Pareq']) ? $data['d3Pareq'] : null,
-            isset($data['returnUrl']) ? $data['returnUrl'] : null
+            isset($data['settlementDate']) ? (new DateTime('@' . $data['settlementDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())) : null,
+            isset($data['settlementAmount']) ? $data['settlementAmount'] : null,
+            isset($data['regularCreated']) ? boolval($data['regularCreated']) : null,
+            isset($data['regularCheckout']) ? boolval($data['regularCheckout']) : null,
+            isset($data['deliveryAddress']) ? $data['deliveryAddress'] : null,
+            isset($data['deliveryPhone']) ? $data['deliveryPhone'] : null,
+            isset($data['deliveryName']) ? $data['deliveryName'] : null,
+            isset($data['products']) ? $data['products'] : null,
+            isset($data['clientFields']) ? $data['clientFields'] : null
         );
     }
 
     public function __construct(
-        $merchantTransactionType,
+        $type,
         $orderReference,
         DateTime $createdDate,
         $amount, $currency,
@@ -142,15 +133,18 @@ class Transaction extends TransactionBase
         $fee = null,
         $baseAmount = null,
         $baseCurrency = null,
-        $authCode = null,
-        $authTicket = null,
-        $recToken = null,
-        $d3AcsUrl = null,
-        $d3Md = null,
-        $d3Pareq = null,
-        $returnUrl = null
+        DateTime $settlementDate = null,
+        $settlementAmount = null,
+        $regularCreated = null,
+        $regularCheckout = null,
+        $deliveryAddress = null,
+        $deliveryPhone = null,
+        $deliveryName = null,
+        $products = null,
+        $clientFields = null
     ) {
         parent::__construct(
+            $type,
             $orderReference,
             $createdDate,
             $amount,
@@ -168,80 +162,73 @@ class Transaction extends TransactionBase
             $issuerBankName,
             $fee,
             $baseAmount,
-            $baseCurrency
+            $baseCurrency,
+            $settlementDate,
+            $settlementAmount
         );
 
-        $this->merchantTransactionType = strval($merchantTransactionType);
-        $this->authCode = strval($authCode);
-        $this->authTicket = strval($authTicket);
-        $this->recToken = $recToken ? new CardToken($recToken) : null;
-        $this->d3AcsUrl = strval($d3AcsUrl);
-        $this->d3Md = strval($d3Md);
-        $this->d3Pareq = strval($d3Pareq);
-        $this->returnUrl = strval($returnUrl);
+        $this->regularCreated  = $regularCreated;
+        $this->regularCheckout = $regularCheckout;
+        $this->deliveryAddress = $deliveryAddress;
+        $this->deliveryPhone   = $deliveryPhone;
+        $this->deliveryName    = $deliveryName;
+        $this->products        = $products;
+        $this->clientFields    = $clientFields;
     }
 
     /**
-     * @return string
+     * @return bool|null
      */
-    public function getMerchantTransactionType()
+    public function getRegularCreated()
     {
-        return $this->merchantTransactionType;
+        return $this->regularCreated;
     }
 
     /**
-     * @return string
+     * @return bool|null
      */
-    public function getAuthCode()
+    public function getRegularCheckout()
     {
-        return $this->authCode;
+        return $this->regularCheckout;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAuthTicket()
+    public function getDeliveryAddress()
     {
-        return $this->authTicket;
+        return $this->deliveryAddress;
     }
 
     /**
-     * @return CardToken
+     * @return string|null
      */
-    public function getRecToken()
+    public function getDeliveryPhone()
     {
-        return $this->recToken;
+        return $this->deliveryPhone;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getD3AcsUrl()
+    public function getDeliveryName()
     {
-        return $this->d3AcsUrl;
+        return $this->deliveryName;
     }
 
     /**
-     * @return string
+     * @return array|null
      */
-    public function getD3Md()
+    public function getProducts()
     {
-        return $this->d3Md;
+        return $this->products;
     }
 
     /**
-     * @return string
+     * @return array|null
      */
-    public function getD3Pareq()
+    public function getClientFields()
     {
-        return $this->d3Pareq;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReturnUrl()
-    {
-        return $this->returnUrl;
+        return $this->clientFields;
     }
 }

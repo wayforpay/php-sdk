@@ -75,6 +75,11 @@ class InvoiceRequest extends ApiRequest
     private $serviceUrl;
 
     /**
+     * @var string
+     */
+    private $returnUrl;
+
+    /**
      * @var int
      */
     private $holdTimeout;
@@ -109,7 +114,8 @@ class InvoiceRequest extends ApiRequest
         $holdTimeout = null,
         $orderTimeout = null,
         $orderLifetime = null,
-        $language = null
+        $language = null,
+        $returnUrl = null
     )
     {
         parent::__construct($credential);
@@ -127,6 +133,7 @@ class InvoiceRequest extends ApiRequest
         $this->orderTimeout = intval($orderTimeout);
         $this->orderLifetime = intval($orderLifetime);
         $this->language = strval($language);
+        $this->returnUrl = strval($returnUrl);
     }
 
     public function getRequestSignatureFieldsValues()
@@ -157,6 +164,7 @@ class InvoiceRequest extends ApiRequest
             'merchantDomainName'   => $this->merchantDomainName,
             'language'             => $this->language,
             'serviceUrl'           => $this->serviceUrl,
+            'returnUrl'            => $this->returnUrl,
             'orderReference'       => $this->orderReference,
             'orderDate'            => $this->orderDate->getTimestamp(),
             'amount'               => $this->amount,

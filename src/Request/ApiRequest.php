@@ -28,7 +28,13 @@ use WayForPay\SDK\Helper\SignatureHelper;
 
 abstract class ApiRequest implements RequestInterface
 {
-    const API_VERSION = 1;
+    const API_VERSION   = 1;
+    const API_VERSION_2 = 2;
+
+    /**,
+     * @var int
+     */
+    private $apiVersion = self::API_VERSION;
 
     /**
      * @var RequestTransformerInterface
@@ -59,7 +65,7 @@ abstract class ApiRequest implements RequestInterface
                 $this->getRequestSignatureFieldsValues(),
                 $this->credential->getSecret()
             ),
-            'apiVersion' => self::API_VERSION,
+            'apiVersion' => $this->getApiVersion(),
         );
     }
 
@@ -164,5 +170,21 @@ abstract class ApiRequest implements RequestInterface
         }
 
         return $response;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApiVersion()
+    {
+        return $this->apiVersion;
+    }
+
+    /**
+     * @param int $apiVersion
+     */
+    public function setApiVersion($apiVersion)
+    {
+        $this->apiVersion = $apiVersion;
     }
 }
