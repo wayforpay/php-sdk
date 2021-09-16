@@ -12,32 +12,48 @@
  * file that was distributed with this source code.
  */
 
-namespace WayForPay\SDK\Domain;
+namespace WayForPay\SDK\Domain\V2;
 
 use DateTime;
 use DateTimeZone;
+use WayForPay\SDK\Domain\TransactionHistory;
 
-class TransactionHistory extends TransactionBase
+class TransactionHistoryV2 extends TransactionHistory
 {
     /**
-     * @var string
+     * @var bool|null
      */
-    private $type;
+    public $regularCreated;
 
     /**
-     * @var DateTime|null
+     * @var bool|null
      */
-    private $settlementDate;
+    public $regularCheckout;
 
     /**
-     * @var float|null
+     * @var string|null
      */
-    private $settlementAmount;
+    public $deliveryAddress;
 
     /**
-     * @var float|null
+     * @var string|null
      */
-    private $refundAmount;
+    public $deliveryPhone;
+
+    /**
+     * @var string|null
+     */
+    public $deliveryName;
+
+    /**
+     * @var array|null
+     */
+    public $products;
+
+    /**
+     * @var array|null
+     */
+    public $clientFields;
 
     /**
      * @param array $data
@@ -87,7 +103,14 @@ class TransactionHistory extends TransactionBase
             isset($data['baseAmount']) ? $data['baseAmount'] : null,
             isset($data['baseCurrency']) ? $data['baseCurrency'] : null,
             isset($data['settlementDate']) ? (new DateTime('@' . $data['settlementDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())) : null,
-            isset($data['settlementAmount']) ? $data['settlementAmount'] : null
+            isset($data['settlementAmount']) ? $data['settlementAmount'] : null,
+            isset($data['regularCreated']) ? boolval($data['regularCreated']) : null,
+            isset($data['regularCheckout']) ? boolval($data['regularCheckout']) : null,
+            isset($data['deliveryAddress']) ? $data['deliveryAddress'] : null,
+            isset($data['deliveryPhone']) ? $data['deliveryPhone'] : null,
+            isset($data['deliveryName']) ? $data['deliveryName'] : null,
+            isset($data['products']) ? $data['products'] : null,
+            isset($data['clientFields']) ? $data['clientFields'] : null
         );
     }
 
@@ -111,9 +134,17 @@ class TransactionHistory extends TransactionBase
         $baseAmount = null,
         $baseCurrency = null,
         DateTime $settlementDate = null,
-        $settlementAmount = null
+        $settlementAmount = null,
+        $regularCreated = null,
+        $regularCheckout = null,
+        $deliveryAddress = null,
+        $deliveryPhone = null,
+        $deliveryName = null,
+        $products = null,
+        $clientFields = null
     ) {
         parent::__construct(
+            $type,
             $orderReference,
             $createdDate,
             $amount,
@@ -131,44 +162,73 @@ class TransactionHistory extends TransactionBase
             $issuerBankName,
             $fee,
             $baseAmount,
-            $baseCurrency
+            $baseCurrency,
+            $settlementDate,
+            $settlementAmount
         );
 
-        $this->type = strval($type);
-        $this->settlementDate = $settlementDate;
-        $this->settlementAmount = $settlementAmount;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
+        $this->regularCreated  = $regularCreated;
+        $this->regularCheckout = $regularCheckout;
+        $this->deliveryAddress = $deliveryAddress;
+        $this->deliveryPhone   = $deliveryPhone;
+        $this->deliveryName    = $deliveryName;
+        $this->products        = $products;
+        $this->clientFields    = $clientFields;
     }
 
     /**
-     * @return DateTime|null
+     * @return bool|null
      */
-    public function getSettlementDate()
+    public function getRegularCreated()
     {
-        return $this->settlementDate;
+        return $this->regularCreated;
     }
 
     /**
-     * @return float|null
+     * @return bool|null
      */
-    public function getSettlementAmount()
+    public function getRegularCheckout()
     {
-        return $this->settlementAmount;
+        return $this->regularCheckout;
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getRefundAmount()
+    public function getDeliveryAddress()
     {
-        return $this->refundAmount;
+        return $this->deliveryAddress;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryPhone()
+    {
+        return $this->deliveryPhone;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryName()
+    {
+        return $this->deliveryName;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getClientFields()
+    {
+        return $this->clientFields;
     }
 }

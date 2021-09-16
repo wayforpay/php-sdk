@@ -17,11 +17,12 @@ namespace WayForPay\SDK\Request;
 use DateTime;
 use WayForPay\SDK\Credential\AccountSecretCredential;
 use WayForPay\SDK\Response\TransactionListResponse;
+use WayForPay\SDK\Response\V2\TransactionListResponseV2;
 
 /**
  * Class TransactionListRequest
  * @package WayForPay\SDK\Request
- * @method TransactionListResponse send()
+ * @method TransactionListResponse|TransactionListResponseV2 send()
  */
 class TransactionListRequest extends ApiRequest
 {
@@ -66,6 +67,10 @@ class TransactionListRequest extends ApiRequest
 
     public function getResponseClass()
     {
-        return TransactionListResponse::getClass();
+        if (ApiRequest::API_VERSION_2 == $this->getApiVersion()) {
+            return TransactionListResponseV2::getClass();
+        } else {
+            return TransactionListResponse::getClass();
+        }
     }
 }
