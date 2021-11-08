@@ -3,3 +3,4 @@ vendor
 composer.lock
 pay.html
 widget.html
+.phpunit.cache
