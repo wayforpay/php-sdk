@@ -27,6 +27,11 @@ class Response implements ResponseInterface
     private $reason;
 
     /**
+     * @var array
+     */
+    private $data;
+
+    /**
      * Response constructor.
      * @param array $data
      * @throws InvalidFieldException
@@ -43,6 +48,7 @@ class Response implements ResponseInterface
         }
 
         $this->reason = new Reason($data['reasonCode'], $data['reason']);
+        $this->data = $data;
 
         if (!$this->reason->isOK()) {
 //            throw new ApiException($this->reason);
@@ -55,6 +61,15 @@ class Response implements ResponseInterface
     public function getReason()
     {
         return $this->reason;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->data;
     }
 
     /**
