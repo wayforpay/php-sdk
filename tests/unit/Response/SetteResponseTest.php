@@ -3,6 +3,7 @@
 namespace Tests\WayForPay\SDK\Response;
 
 use PHPUnit\Framework\TestCase;
+use WayForPay\SDK\Domain\CardToken;
 use WayForPay\SDK\Response\SettleResponse;
 
 /**
@@ -16,8 +17,8 @@ class SettleResponseTest extends TestCase {
     private $data = array(
         'orderReference' => 'test-order-reference',
         'currency' => 'UAH',
-        'amount' => 200,
-        'transactionStatus' => 'Approve',
+        'amount' => 200.0,
+        'transactionStatus' => 'Approved',
         'authCode' => 'test-auth-code',
         'createdDate' => '',
         'processingDate' => '',
@@ -44,15 +45,32 @@ class SettleResponseTest extends TestCase {
             'reasonCode' => '1100'
         )));
 
-
-
         foreach ($this->data as $field => $value) {
             if(in_array($field, array('createdDate', 'processingDate'))) {
                 $value = \DateTime::createFromFormat('U', $value);
+            } elseif($field == 'transactionStatus') {
+                $field = 'Status';
             }
 
-            $this->assertEquals($value, $response->{'get'.ucfirst($field)}(), 'Wrong value field ' . $field);
+            $realValue = $response->getTransaction()->{'get'.ucfirst($field)}();
+
+            $this->assertEquals($this->convertToScalar($value), $this->convertToScalar($realValue), 'Wrong value field ' . $field.' Value: ' . $this->convertToScalar($value));
+
         }
+    }
+
+    /**
+     * @param $value
+     * @return bool|float|int|string
+     */
+    private function convertToScalar($value) {
+        if($value instanceof \DateTime) {
+            return (string)$value->getTimestamp();
+        } elseif ($value instanceof CardToken) {
+            return $value->getToken();
+        }
+
+        return $value;
     }
 
 
