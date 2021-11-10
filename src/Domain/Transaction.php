@@ -15,6 +15,7 @@
 namespace WayForPay\SDK\Domain;
 
 use DateTime;
+use DateTimeZone;
 
 class Transaction extends TransactionBase
 {
