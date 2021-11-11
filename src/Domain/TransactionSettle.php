@@ -17,22 +17,12 @@ namespace WayForPay\SDK\Domain;
 use DateTime;
 use DateTimeZone;
 
-class Transaction extends TransactionBase
+class TransactionSettle extends TransactionBase
 {
     /**
      * @var string
      */
-    private $merchantTransactionType;
-
-    /**
-     * @var string
-     */
-    private $authCode;
-
-    /**
-     * @var string
-     */
-    private $authTicket;
+    private $merchantAccount;
 
     /**
      * @var CardToken
@@ -42,65 +32,52 @@ class Transaction extends TransactionBase
     /**
      * @var string
      */
-    private $d3AcsUrl;
+    private $authCode;
 
     /**
      * @var string
      */
-    private $d3Md;
-
-    /**
-     * @var string
-     */
-    private $d3Pareq;
-
-    /**
-     * @var string
-     */
-    private $returnUrl;
+    private $orderNo;
 
     /**
      * @param array $data
-     * @return Transaction
+     * @return TransactionSettle
      * @throws \Exception
      */
     public static function fromArray(array $data)
     {
-        $required = array(
-            'merchantTransactionType',
-            'authCode',
-            'authTicket',
-            'recToken',
-            'd3AcsUrl',
-            'd3Md',
-            'd3Pareq',
-            'returnUrl',
-
-            'orderReference',
-            'createdDate',
-            'amount',
-            'currency',
-            'transactionStatus',
-            'processingDate',
-            'reasonCode',
-            'reason',
+        $default = array(
+            'merchantAccount' => '',
+            'orderReference' => '',
+            'merchantSignature' => '',
+            'amount' => 0,
+            'currency' => '',
+            'authCode' => 0,
+            'email' => '',
+            'phone' => '',
+            'createdDate' => 0,
+            'processingDate' => 0,
+            'cardPan' => '',
+            'cardType' => '',
+            'issuerBankCountry' => '',
+            'issuerBankName' => '',
+            'recToken' => '',
+            'transactionStatus' => '',
+            'reason' => '',
+            'reasonCode' => 0,
+            'fee' => 0,
+            'paymentSystem' => '',
+            'orderNo' => '',
         );
 
-        if ($fieldsMissed = array_diff($required, array_keys($data))) {
-            throw new \InvalidArgumentException(
-                'Transaction data have missed fields: ' . implode(', ', $fieldsMissed)
-            );
-        }
+        $data = array_merge($default, $data);
 
         return new self(
-            $data['merchantTransactionType'],
             $data['orderReference'],
-//            new DateTime('@' . $data['createdDate']),
             (new DateTime('@' . $data['createdDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())),
             $data['amount'],
             $data['currency'],
             $data['transactionStatus'],
-//            new DateTime('@' . $data['processingDate']),
             (new DateTime('@' . $data['processingDate']))->setTimezone(new DateTimeZone(date_default_timezone_get())),
             $data['reasonCode'],
             $data['reason'],
@@ -114,18 +91,14 @@ class Transaction extends TransactionBase
             isset($data['fee']) ? $data['fee'] : null,
             isset($data['baseAmount']) ? $data['baseAmount'] : null,
             isset($data['baseCurrency']) ? $data['baseCurrency'] : null,
-            isset($data['authCode']) ? $data['authCode'] : null,
-            isset($data['authTicket']) ? $data['authTicket'] : null,
+            isset($data['merchantAccount']) ? $data['merchantAccount'] : null,
             isset($data['recToken']) ? $data['recToken'] : null,
-            isset($data['d3AcsUrl']) ? $data['d3AcsUrl'] : null,
-            isset($data['d3Md']) ? $data['d3Md'] : null,
-            isset($data['d3Pareq']) ? $data['d3Pareq'] : null,
-            isset($data['returnUrl']) ? $data['returnUrl'] : null
+            isset($data['authCode']) ? $data['authCode'] : null,
+            isset($data['orderNo']) ? $data['orderNo'] : null
         );
     }
 
     public function __construct(
-        $merchantTransactionType,
         $orderReference,
         DateTime $createdDate,
         $amount, $currency,
@@ -143,13 +116,10 @@ class Transaction extends TransactionBase
         $fee = null,
         $baseAmount = null,
         $baseCurrency = null,
-        $authCode = null,
-        $authTicket = null,
+        $merchantAccount = null,
         $recToken = null,
-        $d3AcsUrl = null,
-        $d3Md = null,
-        $d3Pareq = null,
-        $returnUrl = null
+        $authCode = null,
+        $orderNo = null
     ) {
         parent::__construct(
             $orderReference,
@@ -172,38 +142,18 @@ class Transaction extends TransactionBase
             $baseCurrency
         );
 
-        $this->merchantTransactionType = strval($merchantTransactionType);
-        $this->authCode = strval($authCode);
-        $this->authTicket = strval($authTicket);
+        $this->merchantAccount = strval($merchantAccount);
         $this->recToken = $recToken ? new CardToken($recToken) : null;
-        $this->d3AcsUrl = strval($d3AcsUrl);
-        $this->d3Md = strval($d3Md);
-        $this->d3Pareq = strval($d3Pareq);
-        $this->returnUrl = strval($returnUrl);
+        $this->authCode = strval($authCode);
+        $this->orderNo  = strval($orderNo);
     }
 
     /**
      * @return string
      */
-    public function getMerchantTransactionType()
+    public function getMerchantAccount()
     {
-        return $this->merchantTransactionType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthCode()
-    {
-        return $this->authCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthTicket()
-    {
-        return $this->authTicket;
+        return $this->merchantAccount;
     }
 
     /**
@@ -217,32 +167,17 @@ class Transaction extends TransactionBase
     /**
      * @return string
      */
-    public function getD3AcsUrl()
+    public function getAuthCode()
     {
-        return $this->d3AcsUrl;
+        return $this->authCode;
     }
+
 
     /**
      * @return string
      */
-    public function getD3Md()
+    public function getOrderNo()
     {
-        return $this->d3Md;
-    }
-
-    /**
-     * @return string
-     */
-    public function getD3Pareq()
-    {
-        return $this->d3Pareq;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReturnUrl()
-    {
-        return $this->returnUrl;
+        return $this->orderNo;
     }
 }
