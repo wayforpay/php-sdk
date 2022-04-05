@@ -29,4 +29,5 @@ $response = SettleWizard::get($credential)
     ->send();
 
 echo 'Reason Code: ' . $response->getReason()->getCode() . PHP_EOL;
-echo 'Order status: ' . $response->getTransactionStatus() . PHP_EOL;
+echo 'ReasonMessage: ' . $response->getReason()->getMessage() . PHP_EOL;
+echo 'Order status: ' . $response->getTransaction()->getStatus() . PHP_EOL;
