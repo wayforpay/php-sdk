@@ -22,7 +22,7 @@ use WayForPay\SDK\Response\TransactionListResponse;
 class TransactionListResponseV2 extends TransactionListResponse
 {
     /**
-     * @var ArrayList
+     * @var TransactionHistoryCollection|TransactionHistoryV2
      */
     private $transactionList;
 

@@ -15,7 +15,6 @@
 namespace WayForPay\SDK\Wizard;
 
 use WayForPay\SDK\Credential\AccountSecretCredential;
-use WayForPay\SDK\Request\RefundRequest;
 use WayForPay\SDK\Request\SettleRequest;
 
 /**

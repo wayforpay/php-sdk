@@ -14,6 +14,7 @@
 
 namespace WayForPay\SDK\Request;
 
+use Exception;
 use WayForPay\SDK\Client\CurlRequestTransformer;
 use WayForPay\SDK\Contract\EndpointInterface;
 use WayForPay\SDK\Contract\RequestInterface;
@@ -134,7 +135,7 @@ abstract class ApiRequest implements RequestInterface
     {
         try {
             return $this->getTransformer()->transform($this);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ApiException(new Reason(-1, $e->getMessage()));
         }
     }
@@ -144,7 +145,7 @@ abstract class ApiRequest implements RequestInterface
     /**
      * @param array $data
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function getResponse(array $data)
     {
