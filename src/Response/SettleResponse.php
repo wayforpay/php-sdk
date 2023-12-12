@@ -15,8 +15,6 @@
 namespace WayForPay\SDK\Response;
 
 use WayForPay\SDK\Domain\Transaction;
-use WayForPay\SDK\Domain\TransactionBase;
-use WayForPay\SDK\Domain\TransactionService;
 use WayForPay\SDK\Domain\TransactionSettle;
 
 /**

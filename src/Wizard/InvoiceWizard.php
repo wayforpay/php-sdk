@@ -14,7 +14,11 @@
 
 namespace WayForPay\SDK\Wizard;
 
+use DateTime;
+use WayForPay\SDK\Collection\ProductCollection;
 use WayForPay\SDK\Credential\AccountSecretCredential;
+use WayForPay\SDK\Domain\Client;
+use WayForPay\SDK\Domain\PaymentSystems;
 use WayForPay\SDK\Request\InvoiceRequest;
 
 class InvoiceWizard extends RequestWizard
@@ -107,7 +111,7 @@ class InvoiceWizard extends RequestWizard
     /**
      * @param AccountSecretCredential $credential
      *
-     * @return InvoceWizard
+     * @return InvoiceWizard
      */
     public static function get(AccountSecretCredential $credential)
     {
@@ -274,7 +278,7 @@ class InvoiceWizard extends RequestWizard
     }
 
     /**
-     * @return RefundRequest
+     * @return InvoiceRequest
      */
     public function getRequest()
     {

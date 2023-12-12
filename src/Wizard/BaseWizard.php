@@ -14,12 +14,14 @@
 
 namespace WayForPay\SDK\Wizard;
 
+use InvalidArgumentException;
+
 abstract class BaseWizard
 {
     protected $propertyRequired = array();
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function check()
     {
@@ -34,7 +36,7 @@ abstract class BaseWizard
         }
 
         if ($missed) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Some arguments missed: ' . implode(', ', $missed) .
                 '. Check next methods are called: ' . PHP_EOL . PHP_EOL . implode(PHP_EOL, $calls)
             );
