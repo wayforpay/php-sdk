@@ -28,6 +28,7 @@ $credential = new AccountSecretTestCredential();
 $form = PurchaseWizard::get($credential)
     ->setOrderReference(sha1(microtime(true)))
     ->setAmount(0.01)
+//    ->setApiVersion(\WayForPay\SDK\Form\PurchaseForm::API_VERSION_2)
     ->setCurrency('USD')
     ->setOrderDate(new \DateTime())
     ->setMerchantDomainName('https://google.com')

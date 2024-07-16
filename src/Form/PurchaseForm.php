@@ -32,6 +32,14 @@ use WayForPay\SDK\Helper\SignatureHelper;
 
 class PurchaseForm
 {
+    const API_VERSION   = 1;
+    const API_VERSION_2 = 2;
+
+    /**,
+     * @var int
+     */
+    private $apiVersion = self::API_VERSION;
+
     private $merchantAuthTypeAllowed = array(
         MerchantTypes::AUTH_SIMPLE_SIGNATURE,
     );
@@ -207,7 +215,8 @@ class PurchaseForm
         $language = null,
         $orderNo = null,
         $alternativeAmount = null,
-        $alternativeCurrency = null
+        $alternativeCurrency = null,
+        $apiVersion = 1
     ) {
         $this->credential = $credential;
         $this->orderReference = strval($orderReference);
@@ -235,11 +244,13 @@ class PurchaseForm
         $this->orderNo = strval($orderNo);
         $this->alternativeAmount = floatval($alternativeAmount);
         $this->alternativeCurrency = strval($alternativeCurrency);
+        $this->apiVersion = $apiVersion;
     }
 
     public function getData()
     {
         return array(
+            'apiVersion' => $this->apiVersion,
             'merchantAccount' => $this->credential->getAccount(),
             'merchantDomainName' => $this->merchantDomainName,
             'merchantTransactionType' => $this->merchantTransactionType,

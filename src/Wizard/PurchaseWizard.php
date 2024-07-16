@@ -157,6 +157,11 @@ class PurchaseWizard extends BaseWizard
      */
     protected $alternativeCurrency;
 
+    /**
+     * @var int
+     */
+    protected $apiVersion = 1;
+
     protected $propertyRequired = array(
         'orderReference', 'amount', 'currency',
         'products', 'orderDate',
@@ -418,6 +423,14 @@ class PurchaseWizard extends BaseWizard
     }
 
     /**
+     * @param int $apiVersion
+     */
+    public function setApiVersion($apiVersion)
+    {
+        $this->apiVersion = $apiVersion;
+    }
+
+    /**
      * @param string $alternativeCurrency
      * @return PurchaseWizard
      */
@@ -460,7 +473,8 @@ class PurchaseWizard extends BaseWizard
             $this->language,
             $this->orderNo,
             $this->alternativeAmount,
-            $this->alternativeCurrency
+            $this->alternativeCurrency,
+            $this->apiVersion
         );
     }
 }
