@@ -39,8 +39,8 @@ class PaymentSystems
 
     /**
      * PaymentSystems constructor.
+     * @param array $list
      * @param $default
-     * @param $list
      */
     public function __construct(array $list = array(), $default = null)
     {

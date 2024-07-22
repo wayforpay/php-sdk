@@ -116,7 +116,7 @@ class Regular
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getModes()
     {
