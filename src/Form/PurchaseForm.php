@@ -314,6 +314,7 @@ class PurchaseForm
             'aviaLastName' => $this->avia->getNameLast(),
             'aviaReservationCode' => $this->avia->getReservationCode(),
 
+            'regularBehavior' => $this->regular ? $this->regular->getBehavior() : null,
             'regularMode' => $this->regular ? $this->regular->getModesAsString() : null,
             'regularAmount' => $this->regular ? $this->regular->getAmount() : null,
             'dateNext' => $this->regular && $this->regular->getDateNext() ?
