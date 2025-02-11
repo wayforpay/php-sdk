@@ -15,7 +15,6 @@
 namespace WayForPay\SDK\Form;
 
 use DateTime;
-use PFBC\Form;
 use WayForPay\SDK\Collection\ProductCollection;
 use WayForPay\SDK\Contract\EndpointInterface;
 use WayForPay\SDK\Credential\AccountSecretCredential;
@@ -332,7 +331,7 @@ class PurchaseForm
     }
 
     /**
-     * @return EndpointInterface|ApiEndpoint
+     * @return EndpointInterface
      */
     public function getEndpoint()
     {

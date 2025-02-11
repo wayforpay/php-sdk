@@ -15,6 +15,7 @@
 namespace WayForPay\SDK\Collection;
 
 use Easy\Collections\ArrayList;
+use InvalidArgumentException;
 use WayForPay\SDK\Contract\SignatureAbleInterface;
 use WayForPay\SDK\Domain\Product;
 
@@ -23,7 +24,7 @@ class ProductCollection extends ArrayList implements SignatureAbleInterface
     public function add($item)
     {
         if (!$item instanceof Product) {
-            throw new \InvalidArgumentException('Expect Product, got ' . get_class($item));
+            throw new InvalidArgumentException('Expect Product, got ' . get_class($item));
         }
 
         return parent::add($item);
